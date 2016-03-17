@@ -8,8 +8,8 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.Map.Entry;
+import java.util.UUID;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -36,14 +36,14 @@ public class ItemUtils {
 		return banner;
 	}
 
-	public static Class<?> nmis = NMSUtils.getNMSClass("ItemStack"), cis = NMSUtils.getOBCClass("inventory.CraftItemStack");
+	public static Class<?> nmis = NMSUtils.getClass("net.minecraft.item.ItemStack"), cis = NMSUtils.getOBCClass("inventory.CraftItemStack");
 	public static Method nmscopy = NMSUtils.getMethod(cis, "asNMSCopy", ItemStack.class);
 
 	public static Object getNMSCopy(ItemStack is) throws Exception{
 		return nmscopy.invoke(null, is);
 	}
 
-	public static Method hastag = NMSUtils.getMethod(nmis, "hasTag");
+	public static Method hastag = NMSUtils.getMethod(nmis, "func_77942_o");
 
 	public static boolean hasTag(Object is) throws Exception{
 		return (boolean) hastag.invoke(is);
@@ -55,9 +55,9 @@ public class ItemUtils {
 		return (ItemStack)acm.invoke(null, nis);
 	}
 
-	private static Class<?> ni = NMSUtils.getNMSClass("Item");
+	private static Class<?> ni = NMSUtils.getClass("net.minecraft.item.Item");
 
-	private static Method gn = NMSUtils.getMethod(nmis, "getName");
+	private static Method gn = NMSUtils.getMethod(nmis, "func_82833_r");
 
 	public static String getName(ItemStack is){
 		try{
@@ -67,18 +67,10 @@ public class ItemUtils {
 		}
 	}
 
-	private static Method gi = NMSUtils.getMethod(nmis, "getItem"), ia = getA();
+	private static Method gi = NMSUtils.getMethod(nmis, "func_77973_b"), ia = NMSUtils.getMethod(ni, "func_77653_i", nmis);
 
 	public static Object getItem(Object nis) throws Exception{
 		return gi.invoke(nis);
-	}
-
-	private static Method getA(){
-		Method m = NMSUtils.getMethod(ni, "a", nmis);
-		if(m==null){
-			m = NMSUtils.getMethod(ni, "n", nmis);
-		}
-		return m;
 	}
 
 	public static String getRawName(ItemStack is){
@@ -111,6 +103,7 @@ public class ItemUtils {
 		return null;
 	}
 	
+	//TODO
 	@SuppressWarnings("unused")
 	private static Class<?> nmrs = NMSUtils.getNMSClass("RegistrySimple"), nmrm = NMSUtils.getNMSClass("RegistryMaterials");
 	private static Field nmrsc = NMSUtils.getField(nmrs, "c");
@@ -132,8 +125,8 @@ public class ItemUtils {
 		return null;
 	}
 
-	public static Class<?> nbttc = NMSUtils.getNMSClass("NBTTagCompound");
-	public static Field tag = NMSUtils.getField(nmis, "tag");
+	public static Class<?> nbttc = NMSUtils.getClass("net.minecraft.nbt.NBTTagCompound");
+	public static Field tag = NMSUtils.getField(nmis, "field_77990_d");
 
 	public static Object getTag(Object is) throws Exception{
 		return tag.get(is);
@@ -143,25 +136,25 @@ public class ItemUtils {
 		tag.set(is, tag1);
 	}
 
-	public static Method nbtcie = NMSUtils.getMethod(nbttc, "isEmpty");
+	public static Method nbtcie = NMSUtils.getMethod(nbttc, "func_82582_d");
 
 	public static boolean isEmpty(Object tag) throws Exception{
 		return (boolean) nbtcie.invoke(tag);
 	}
 
-	public static Field nbttcm = NMSUtils.getField(nbttc, "map");
+	public static Field nbttcm = NMSUtils.getField(nbttc, "field_74784_a");
 
 	public static Object getMap(Object tag) throws Exception{
 		return nbttcm.get(tag);
 	}
 
-	public static Class<?> nbtb = NMSUtils.getNMSClass("NBTBase");
-	public static Method nbttcs = NMSUtils.getMethod(nbttc, "set", String.class, nbtb);
-	public static Method nbttcss = NMSUtils.getMethod(nbttc, "setString", String.class, String.class);
-	public static Method nbttcsi = NMSUtils.getMethod(nbttc, "setInt", String.class, int.class);
-	public static Method nbttcsd = NMSUtils.getMethod(nbttc, "setDouble", String.class, double.class);
-	public static Method nbttcsl = NMSUtils.getMethod(nbttc, "setLong", String.class, long.class);
-	public static Method nbttcss1 = NMSUtils.getMethod(nbttc, "setShort", String.class, short.class);
+	public static Class<?> nbtb = NMSUtils.getClass("net.minecraft.nbt.NBTBase");
+	public static Method nbttcs = NMSUtils.getMethod(nbttc, "func_74782_a", String.class, nbtb);
+	public static Method nbttcss = NMSUtils.getMethod(nbttc, "func_74778_a", String.class, String.class);
+	public static Method nbttcsi = NMSUtils.getMethod(nbttc, "func_74768_a", String.class, int.class);
+	public static Method nbttcsd = NMSUtils.getMethod(nbttc, "func_74780_a", String.class, double.class);
+	public static Method nbttcsl = NMSUtils.getMethod(nbttc, "func_74772_a", String.class, long.class);
+	public static Method nbttcss1 = NMSUtils.getMethod(nbttc, "func_74777_a", String.class, short.class);
 
 	public static void set(Object tag, String key, Object value) throws Exception{
 		nbttcs.invoke(tag, key, value);
@@ -187,18 +180,18 @@ public class ItemUtils {
 		nbttcsl.invoke(tag, key, l);
 	}
 
-	public static Method nbttchk = NMSUtils.getMethod(nbttc, "hasKey", String.class);
+	public static Method nbttchk = NMSUtils.getMethod(nbttc, "func_74764_b", String.class);
 
 	public static boolean hasKey(Object tag, String key) throws Exception{
 		return (boolean)nbttchk.invoke(tag, key);
 	}
 
-	public static Method nbttcg = NMSUtils.getMethod(nbttc, "get", String.class);
-	public static Method nbttcgs = NMSUtils.getMethod(nbttc, "getString", String.class);
-	public static Method nbttcgi = NMSUtils.getMethod(nbttc, "getInt", String.class);
-	public static Method nbttcgd = NMSUtils.getMethod(nbttc, "getDouble", String.class);
-	public static Method nbttcgl = NMSUtils.getMethod(nbttc, "getLong", String.class);
-	public static Method nbttcgs1 = NMSUtils.getMethod(nbttc, "getShort", String.class);
+	public static Method nbttcg = NMSUtils.getMethod(nbttc, "func_74775_l", String.class);
+	public static Method nbttcgs = NMSUtils.getMethod(nbttc, "func_74779_i", String.class);
+	public static Method nbttcgi = NMSUtils.getMethod(nbttc, "func_74762_e", String.class);
+	public static Method nbttcgd = NMSUtils.getMethod(nbttc, "func_74769_h", String.class);
+	public static Method nbttcgl = NMSUtils.getMethod(nbttc, "func_74763_f", String.class);
+	public static Method nbttcgs1 = NMSUtils.getMethod(nbttc, "func_74765_d", String.class);
 
 	public static Object get(Object tag, String key) throws Exception{
 		return nbttcg.invoke(tag, key);
@@ -230,17 +223,17 @@ public class ItemUtils {
 		return nbttcc.newInstance();
 	}
 
-	public static Method hkot = NMSUtils.getMethod(nbttc, "hasKeyOfType", String.class, int.class);
+	public static Method hkot = NMSUtils.getMethod(nbttc, "func_150297_b", String.class, int.class);
 
 	public static boolean hasAttributeModifiersKey(Object tag) throws Exception{
 		return (boolean) hkot.invoke(tag, "AttributeModifiers", 9);
 	}
 
-	public static Class<?> nbttl = NMSUtils.getNMSClass("NBTTagList");
-	public static Method gl = NMSUtils.getMethod(nbttc, "getList", String.class, int.class);
-	public static Method gb = NMSUtils.getMethod(nbttc, "getBoolean", String.class);
-	public static Method sb = NMSUtils.getMethod(nbttc, "setBoolean", String.class, boolean.class);
-	public static Method nbttla = NMSUtils.getMethod(nbttl, "add", nbtb);
+	public static Class<?> nbttl = NMSUtils.getClass("net.minecraft.nbt.NBTTagList");
+	public static Method gl = NMSUtils.getMethod(nbttc, "func_150295_c", String.class, int.class);
+	public static Method gb = NMSUtils.getMethod(nbttc, "func_74767_n", String.class);
+	public static Method sb = NMSUtils.getMethod(nbttc, "func_74757_a", String.class, boolean.class);
+	public static Method nbttla = NMSUtils.getMethod(nbttl, "func_74742_a", nbtb);
 	public static Constructor<?> nbttlc = NMSUtils.getConstructor(nbttl);
 
 	public static Object getList(Object tag) throws Exception{
@@ -267,20 +260,20 @@ public class ItemUtils {
 		nbttla.invoke(taglist, nbt);
 	}
 
-	public static Method gs = NMSUtils.getMethod(nbttl, "size");
+	public static Method gs = NMSUtils.getMethod(nbttl, "func_74745_c");
 
 	public static int getSize(Object attribs) throws Exception{
 		return (int)gs.invoke(attribs);
 	}
 
-	public static Method g = NMSUtils.getMethod(nbttl, "get", int.class);
+	public static Method g = NMSUtils.getMethod(nbttl, "func_150305_b", int.class);
 
 	public static Object get(Object tlist, int i) throws Exception{
 		return g.invoke(tlist, i);
 	}
 
-	public static Class<?> am = NMSUtils.getNMSClass("AttributeModifier"), ga = NMSUtils.getNMSClass("GenericAttributes");
-	public static Method a = NMSUtils.getMethod(ga, "a", nbttc), ama = NMSUtils.getMethod(am, "a");
+	public static Class<?> am = NMSUtils.getClass("net.minecraft.entity.ai.attributes.AttributeModifier"), ga = NMSUtils.getClass("net.minecraft.entity.SharedMonsterAttributes");
+	public static Method a = NMSUtils.getMethod(ga, "func_111259_a", nbttc), ama = NMSUtils.getMethod(am, "func_111167_a");
 
 	public static Object getAttribute(Object compound) throws Exception{
 		return a.invoke(null, compound);
@@ -363,25 +356,25 @@ public class ItemUtils {
 		return s;
 	}
 
-	public static Field amd = NMSUtils.getField(am, "d");
+	public static Field amd = NMSUtils.getField(am, "field_111170_d");
 
 	public static UUID getAttributeUUID(Object attrib) throws Exception{
 		return (UUID)amd.get(attrib);
 	}
 
-	public static Field amb = NMSUtils.getField(am, "b");
+	public static Field amb = NMSUtils.getField(am, "field_111172_b");
 
 	public static int getAttributeOperation(Object attrib) throws Exception{
 		return (int)amb.getInt(attrib);
 	}
 
-	public static Field amaf = NMSUtils.getField(am, "a");
+	public static Field amaf = NMSUtils.getField(am, "field_111174_a");
 
 	public static double getAttributeAmount(Object attrib) throws Exception{
 		return (double)amaf.get(attrib);
 	}
 
-	public static Field amc = NMSUtils.getField(am, "c");
+	public static Field amc = NMSUtils.getField(am, "field_111173_c");
 
 	public static String getAttributeNameFromAttribute(Object attrib) throws Exception{
 		return (String)amc.get(attrib);
