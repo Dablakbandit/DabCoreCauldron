@@ -104,7 +104,7 @@ public class ItemUtils {
 	}
 	
 	private static Class<?> nmrs = NMSUtils.getNMSClass("RegistrySimple");
-	private static Field nmrsc = NMSUtils.getField(nmrs, "c");
+	private static Field nmrsc = NMSUtils.getField(nmrs, "field_82596_a");
 	
 	public static String getMinecraftName(ItemStack is){
 		String name = getItemName(is);
